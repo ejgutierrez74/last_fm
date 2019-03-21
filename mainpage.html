@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Menu principal Last FM</title>
+		<meta charset="utf-8">
+		 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<!-- <script type="text/javascript" src="./js/constants.js"></script>-->
+			<script type="text/javascript" src="./js/main.js"></script>
+		</head>
+	<body>
+		<h1>Im login to</h1>
+		<div id="userData">
+<!--<img src="https://lastfm-img2.akamaized.net/i/u/34s/cc637716959b4acecaa1a307e300f61f.png" />-->
+		</div>
+		<div id="success">
+		    <div id="artistName"></div>
+		    <div id="artistImage"></div>
+		    <div id="artistBio"></div>
+		</div>
+		<div id="error"></div>
+
+		<button type="button" onclick="loadUserInfoXMLDoc()">Get User information</button>
+		<br><br>
+		<button type="button" onclick="loadChartTopArtistsJSONDoc()">Get Top Artist Chart</button>
+		<table id="demo"></table>
+
+		<p id="artist"></p>
+
+	</body>
+</html>
