@@ -1,10 +1,144 @@
+var myAPI_key="b6720a4ef50c0a1f63419e334fbf9c74";
+var myshared_secret="5df5d9e40e9375f043edf1e1fb629236";
+
 var url = window.location.href; // or window.location.href for current url
 var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
 var result = captured ? captured : 'myDefaultValue';
 console.log(captured);
+
+function calculateApiSignature(){
+  String.prototype.hashCode = function(){
+
+  	    var hash = 0;
+
+  	    if (this.length == 0) return hash;
+
+  	    for (i = 0; i < this.length; i++) {
+
+  	        char = this.charCodeAt(i);
+
+  	        hash = ((hash<<5)-hash)+char;
+
+  	        hash = hash & hash; // Convert to 32bit integer
+
+  	    }
+
+  	    return hash;
+
+  	};
+  var string = "api_key" + "b6720a4ef50c0a1f63419e334fbf9c74"+ "methodauth.getSessiontoken"+captured;
+  var textoUtf8 = encodeURI(string);
+  textoUtf8 = textoUtf8 + myshared_secret;
+  console.log("String a firmar : " + textoUtf8);
+  var ApiSignature = textoUtf8.hashCode();
+  console.log("Api Signature" + ApiSignature);
+
+}
+
+
+function calculateApiSignatureStack()
+{
+
+  // Set elsewhere but hacked into this example:
+var last_fm_data = {
+    'last_token':captured,
+    'user': 'bob',
+    'secret': '5df5d9e40e9375f043edf1e1fb629236'
+};
+
+// Kick it off.
+last_fm_call('auth.getSession', {'token': last_fm_data['last_token']});
+
+
+// Low level API call, purely builds a POSTable object and calls it.
+function last_fm_call(method, data){
+    // param data - dictionary.
+    last_fm_data[method] = false;
+    // Somewhere to put the result after callback.
+
+    // Append some static variables
+    data.api_key = "b6720a4ef50c0a1f63419e334fbf9c74";
+    //data['format'] = 'json';
+    data['method'] = method;
+
+    post_data = last_fm_sign(data);
+/*
+    token (Required) : A 32-character ASCII hexadecimal MD5 hash returned by step 1 of the authentication process (following the granting of permissions to the application by the user)
+api_key (Required) : A Last.fm API key.
+api_sig (Required) : A Last.fm method signature. See authentication for more information.*/
+    console.log("Post data: Last token " + post_data.token + "ApiKey: "+ post_data.api_key + "ApiSig: " + post_data.api_sig);
+    var last_url="http://ws.audioscrobbler.com/2.0/";
+    $.ajax({
+      type: "GET",
+      url: last_url,
+      data: post_data,
+      dataType: 'json',
+      success: function(res){
+          last_fm_data[method] = res;
+          console.log(res['key'])// Should return session key.
+      },
+      error : function(code, message){
+          console.log("Error en autenticacion");
+      }
+     });
+}
+
+function last_fm_sign(params){
+    ss = "";
+    st = [];
+    so = {};
+    so['api_key'] = params['api_key'];
+    so['token'] = params['token'];
+    Object.keys(params).forEach(function(key){
+        st.push(key); // Get list of object keys
+    });
+    st.sort(); // Alphabetise it
+    st.forEach(function(std){
+        ss = ss + std + params[std]; // build string
+    });
+    ss += last_fm_data['secret'];
+        // console.log(ss + last_fm_data['secret']);
+        // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
+    //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
+    var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
+    console.log("La apiSig es: " + hashed_sec);
+    so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
+    return so; // Returns signed POSTable object
+}
+}
+//Despues de coger token tengo que hacer getSession
+//Idea similar:
+//utf8encoded api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxx
+//append secret:
+//mysecret:5df5d9e40e9375f043edf1e1fb629236
+//tokenkc-yjBlWeFmeojGH3Gq_xo46RlbPTNg-
+//api signature = md5("api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxxmysecret")
+//http://ws.audioscrobbler.com/2.0/api_keyb6720a4ef50c0a1f63419e334fbf9c74methodauth.getSessiontokenkc-yjBlWeFmeojGH3Gq_xo46RlbPTNg-
+//32-character hexadecimal md5 hash.
+/*
+String.prototype.hashCode = function(){
+
+	    var hash = 0;
+
+	    if (this.length == 0) return hash;
+
+	    for (i = 0; i < this.length; i++) {
+
+	        char = this.charCodeAt(i);
+
+	        hash = ((hash<<5)-hash)+char;
+
+	        hash = hash & hash; // Convert to 32bit integer
+
+	    }
+
+	    return hash;
+
+	}
+some string”.hashCode(), and receive a numerical hash code
 sessionStorage.setItem("mytoken",captured);
 var myAPI_key="b6720a4ef50c0a1f63419e334fbf9c74";
-
+*/
 //TAke data user from https://www.last.fm/api/show/user.getInfo
 //eXAMPLE URL: http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=rj&api_key=YOUR_API_KEY&format=json
 //mYurl: http://ws.audioscrobbler.com/2.0/?method=user.getinfo&api_key=b6720a4ef50c0a1f63419e334fbf9c74&format=json
@@ -139,7 +273,7 @@ function loadChartTopArtistsJSONDoc()
 				function mostrarProgres(event) {
 					  if (event.lengthComputable) {
 					    var progres = 100 * event.loaded / event.total;
-					    console.log("Completat: " + progres + "%")
+					    console.log("Completat: " + progres + "%");
 					  } else {
 					    console.log("No es pot calcular el progrés");
 					  }

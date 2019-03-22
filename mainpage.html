@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<!-- <script type="text/javascript" src="./js/constants.js"></script>-->
+			<script type="text/javascript" src="./js/md5.min.js"></script>
 			<script type="text/javascript" src="./js/main.js"></script>
 		</head>
 	<body>
@@ -22,6 +23,9 @@
 		<button type="button" onclick="loadUserInfoXMLDoc()">Get User information</button>
 		<br><br>
 		<button type="button" onclick="loadChartTopArtistsJSONDoc()">Get Top Artist Chart</button>
+		<button type="button" onclick="calculateApiSignature()">Calculate API Signature</button>
+		<button type="button" onclick="calculateApiSignatureStack()">Calculate API Signature Stack</button>
+
 		<table id="demo"></table>
 
 		<p id="artist"></p>
