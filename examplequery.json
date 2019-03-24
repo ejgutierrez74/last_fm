@@ -1,0 +1,163 @@
+{
+  "artisttracks": {
+    "track": [{
+      "artist": {
+        "#text": "Metallica",
+        "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+      },
+      "name": "Halo On Fire",
+      "streamable": "0",
+      "mbid": "",
+      "album": {
+        "#text": "Hardwired…To Self-Destruct (Deluxe)",
+        "mbid": ""
+      },
+      "url": "https://www.last.fm/music/Metallica/_/Halo+On+Fire",
+      "image": [{
+        "#text": "https://lastfm-img2.akamaized.net/i/u/34s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "small"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/64s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "medium"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/174s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "large"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "extralarge"
+      }],
+      "date": {
+        "uts": "1502211937",
+        "#text": "08 Aug 2017, 17:05"
+      }
+    }, {
+      "artist": {
+        "#text": "Metallica",
+        "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+      },
+      "name": "Dream No More",
+      "streamable": "0",
+      "mbid": "",
+      "album": {
+        "#text": "Hardwired…To Self-Destruct (Deluxe)",
+        "mbid": ""
+      },
+      "url": "https://www.last.fm/music/Metallica/_/Dream+No+More",
+      "image": [{
+        "#text": "https://lastfm-img2.akamaized.net/i/u/34s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "small"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/64s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "medium"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/174s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "large"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "extralarge"
+      }],
+      "date": {
+        "uts": "1502211548",
+        "#text": "08 Aug 2017, 16:59"
+      }
+    }, {
+      "artist": {
+        "#text": "Metallica",
+        "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+      },
+      "name": "Moth Into Flame",
+      "streamable": "0",
+      "mbid": "",
+      "album": {
+        "#text": "Hardwired…To Self-Destruct (Deluxe)",
+        "mbid": ""
+      },
+      "url": "https://www.last.fm/music/Metallica/_/Moth+Into+Flame",
+      "image": [{
+        "#text": "https://lastfm-img2.akamaized.net/i/u/34s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "small"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/64s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "medium"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/174s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "large"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "extralarge"
+      }],
+      "date": {
+        "uts": "1502211197",
+        "#text": "08 Aug 2017, 16:53"
+      }
+    }, {
+      "artist": {
+        "#text": "Metallica",
+        "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+      },
+      "name": "Now That We’re Dead",
+      "streamable": "0",
+      "mbid": "",
+      "album": {
+        "#text": "Hardwired…To Self-Destruct (Deluxe)",
+        "mbid": ""
+      },
+      "url": "https://www.last.fm/music/Metallica/_/Now+That+We%E2%80%99re+Dead",
+      "image": [{
+        "#text": "https://lastfm-img2.akamaized.net/i/u/34s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "small"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/64s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "medium"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/174s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "large"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "extralarge"
+      }],
+      "date": {
+        "uts": "1502210778",
+        "#text": "08 Aug 2017, 16:46"
+      }
+    }, {
+      "artist": {
+        "#text": "Metallica",
+        "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+      },
+      "name": "Atlas, Rise!",
+      "streamable": "0",
+      "mbid": "",
+      "album": {
+        "#text": "Hardwired…To Self-Destruct (Deluxe)",
+        "mbid": ""
+      },
+      "url": "https://www.last.fm/music/Metallica/_/Atlas,+Rise%21",
+      "image": [{
+        "#text": "https://lastfm-img2.akamaized.net/i/u/34s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "small"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/64s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "medium"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/174s/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "large"
+      }, {
+        "#text": "https://lastfm-img2.akamaized.net/i/u/300x300/a26f4d91949b80b56d4719d0644fde54.png",
+        "size": "extralarge"
+      }],
+      "date": {
+        "uts": "1502210389",
+        "#text": "08 Aug 2017, 16:39"
+      }
+    }],
+    "@attr": {
+      "user": "RJ",
+      "artist": "metallica",
+      "page": "1",
+      "perPage": "5",
+      "totalPages": "0",
+      "total": "0"
+    }
+  }
+}

@@ -36,80 +36,96 @@ error ->
 function calculateApiSignatureStack()
 {
 
-  // Set elsewhere but hacked into this example:
-var last_fm_data = {
-    'last_token':captured,
-    'user': 'bob',
-    'secret': '5df5d9e40e9375f043edf1e1fb629236'
-};
+          // Set elsewhere but hacked into this example:
+        var last_fm_data = {
+            'last_token':captured,
+            'user': 'bob',
+            'secret': '5df5d9e40e9375f043edf1e1fb629236'
+        };
 
-// Kick it off.
-last_fm_call('auth.getSession', {'token': last_fm_data['last_token']});
+        // Kick it off.
+        last_fm_call('auth.getSession', {'token': last_fm_data['last_token']});
 
 
-// Low level API call, purely builds a POSTable object and calls it.
-function last_fm_call(method, data){
-    // param data - dictionary.
-    last_fm_data[method] = false;
-    // Somewhere to put the result after callback.
+        // Low level API call, purely builds a POSTable object and calls it.
+        function last_fm_call(method, data){
 
-    // Append some static variables
-    data.api_key = "b6720a4ef50c0a1f63419e334fbf9c74";
-    //data['format'] = 'json';
-    data['method'] = method;
+          //data seria {'token': last_fm_data['last_token']} que seria captured o sessionStoragemyToken
+            // param data - dictionary.Populate Values on the Object s you'll see below the Key values can be any object and are not limited to Strings.
+            last_fm_data[method] = false;
+            // Somewhere to put the result after callback.
 
-    post_data = last_fm_sign(data);
-/*
-.*/
-    console.log("Post data: Last token " + post_data.token + "ApiKey: "+ post_data.api_key + "ApiSig: " + post_data.api_sig);
-    var last_url="http://ws.audioscrobbler.com/2.0/?";
-    $.ajax({
-      type: "GET",
-      url: last_url,
-      data : 'method=auth.getSession' +
-             '&token='+
-             captured+
-             '&api_key=b6720a4ef50c0a1f63419e334fbf9c74' +
-             '&api_sig='+
-              post_data.api_sig+
-             '&format=json',
-      //data: post_data,
-      dataType: 'json',
-      success: function(res){
-          last_fm_data[method] = res;
-          //var	myresposta = JSON.parse(res);
-          console.log("Resposta: Name " + res.session.name);// Should return session key.
-          console.log("Resposta: Key " + res.session.key);
-          sessionStorage.setItem("Key", res.session.key);
-      },
-      error : function(code, message){
-          console.log("Error en autenticacion");
-      }
-     });
-}
+            // Append some static variables
+            data.api_key = "b6720a4ef50c0a1f63419e334fbf9c74";
+            //data['format'] = 'json';
+            data['method'] = method;
 
-function last_fm_sign(params){
-    ss = "";
-    st = [];
-    so = {};
-    so['api_key'] = params['api_key'];
-    so['token'] = params['token'];
-    Object.keys(params).forEach(function(key){
-        st.push(key); // Get list of object keys
-    });
-    st.sort(); // Alphabetise it
-    st.forEach(function(std){
-        ss = ss + std + params[std]; // build string
-    });
-    ss += last_fm_data['secret'];
-        // console.log(ss + last_fm_data['secret']);
-        // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
-    //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
-    var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
-    console.log("La apiSig es: " + hashed_sec);
-    so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
-    return so; // Returns signed POSTable object
-}
+            post_data = last_fm_calculate_apisig(data);
+        /*
+        .*/
+            console.log("Post data: Last token " + post_data.token + "ApiKey: "+ post_data.api_key + "ApiSig: " + post_data.api_sig);
+            sessionStorage.setItem("myApiSig",post_data.api_sig );
+
+            var last_url="http://ws.audioscrobbler.com/2.0/?";
+            $.ajax({
+              type: "GET",
+              url: last_url,
+              data : 'method=auth.getSession' +
+                     '&token='+
+                     captured+
+                     '&api_key=b6720a4ef50c0a1f63419e334fbf9c74' +
+                     '&api_sig='+
+                      post_data.api_sig+
+                     '&format=json',
+              //data: post_data,
+              dataType: 'json',
+              //"success" gets called when the returned code is a "200" (successfull request). "error" gets called whenever another code is returned (e.g. 404, 500).
+              success: function(res){
+                  //No caldria aquesta instrucció perque ja guaredem els que ens convé en sessionStorage
+                  last_fm_data[method] = res;
+                  //var	myresposta = JSON.parse(res);
+                  console.log("Resposta: Name " + res.session.name);// Should return session key.
+                  console.log("Resposta: Key " + res.session.key);
+
+                  //store session key for further authenticate operations...
+                  sessionStorage.setItem("mySessionUser", res.session.name);
+                  sessionStorage.setItem("mySessionKey", res.session.key);
+              },
+              error : function(xhr, status, error){
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    console.log('Error - ' + errorMessage);
+              }
+             });
+        }
+
+        function last_fm_calculate_apisig(params){
+
+          //Crec que només necessitem apikey, token i secret i no necessitem params, els podem treure de sessionStorage
+          //Calcula l'apiSig a partir dels valors d'abans...
+            ss = "";
+            st = [];
+            so = {};
+            so['api_key'] = params['api_key'];
+            so['token'] = params['token'];
+            Object.keys(params).forEach(function(key){
+                st.push(key); // Get list of object keys
+            });
+            st.sort(); // Alphabetise it
+            st.forEach(function(std){
+                ss = ss + std + params[std]; // build string
+            });
+            ss += last_fm_data['secret'];
+                // console.log(ss + last_fm_data['secret']);
+                //Segons documentacio : https://www.last.fm/api/webauth
+                //api signature = md5("api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxxmysecret")
+                //OBJECTIU NOSTRE SERA ACONSEGUIR UNA LINEA COM AQUESTA
+                // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
+            //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
+            var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
+            console.log("La apiSig es: " + hashed_sec);
+            so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
+            return so; // Returns signed POSTable object
+        }
 }
 
 /*
@@ -202,31 +218,33 @@ Result XML :
 </user>
 */
 function loadUserInfoXMLDoc() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      myFunction(this);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          //Si hem tingut exit..
+          processarResposta(this);
+        }
+        //Falta processar error
+      };
+      xhttp.open("GET", "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=edufissure&api_key=b6720a4ef50c0a1f63419e334fbf9c74", true);
+      xhttp.send();
     }
-  };
-  xhttp.open("GET", "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=edufissure&api_key=b6720a4ef50c0a1f63419e334fbf9c74", true);
-  xhttp.send();
-}
-function myFunction(xml) {
-  var i;
-  var xmlDoc = xml.responseXML;
-  var table="<tr><th>Data</th><th>Value</th><th>Altre</th></tr>";
-  var x = xmlDoc.getElementsByTagName("user");
-  for (i = 0; i <x.length; i++) {
-    table += "<tr><td>" +
-    x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue +
-    "</td><td>" +
-    x[i].getElementsByTagName("playcount")[0].childNodes[0].nodeValue +
-    "</td><td><img src="+
-    x[i].getElementsByTagName("image")[2].childNodes[0].nodeValue +
-   "></img></td></tr>";
-   console.log(x[i]);
-  }
-  document.getElementById("demo").innerHTML = table;
+    function processarResposta(xml) {
+      var i;
+      var xmlDoc = xml.responseXML;
+      var table="<tr><th>Data</th><th>Value</th><th>Altre</th></tr>";
+      var x = xmlDoc.getElementsByTagName("user");
+      for (i = 0; i <x.length; i++) {
+        table += "<tr><td>" +
+        x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue +
+        "</td><td>" +
+        x[i].getElementsByTagName("playcount")[0].childNodes[0].nodeValue +
+        "</td><td><img src="+
+        x[i].getElementsByTagName("image")[2].childNodes[0].nodeValue +
+       "></img></td></tr>";
+       console.log(x[i]);
+      }
+      document.getElementById("demo").innerHTML = table;
 }
 /*
 
@@ -814,6 +832,214 @@ function myFunction(xml) {
   }
   document.getElementById("demo2").innerHTML = table;
 }
+
+/*
+The only illegal characters are &, < and > (as well as " or ' in attributes).
+
+They're escaped using XML entities, in this case you want &amp; for &.
+
+Metode: https://www.last.fm/api/show/track.addTags
+Objective:  Tag an album using a list of user supplied tags.
+
+Params
+artist (Required) : The artist name
+track (Required) : The track name
+tags (Required) : A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
+api_key (Required) : A Last.fm API key.
+api_sig (Required) : A Last.fm method signature. See authentication for more information.
+sk (Required) : A session key generated by authenticating a user via the authentication protocol.
+
+Auth
+This service requires authentication. Please see our authentication how-to.
+This is a write service and must be accessed with an HTTP POST request.
+All parameters should be sent in the POST body, including the 'method' parameter. See rest requests for more information.
+
+Sample Response
+<lfm status="ok">
+</lfm>
+
+Error in json:
+{
+  "error": 10,
+  "message": "Invalid API key - You must be granted a valid key by last.fm"
+}
+
+Error in xml
+<lfm status="failed">
+    <error code="10">Invalid API key - You must be granted a valid key by last.fm</error>
+</lfm>
+*/
+
+function addTrackTag()
+{
+  if (sessionStorage.getItem("mySessionKey") == null)
+  {
+    console.log("Error no estas authenticat");
+  }
+  else {
+    //Estas loguejat i autenticat de forma correcta--
+          var tag1="Relax";
+          var tag2="Intense";
+        //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+        var dades = {
+          method: "track.addTags",
+          artist : "Muse",
+          track : "Take a Bow",
+          //A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
+          tags : [tag1, tag2],
+          api_key : myAPI_key,
+          api_sig : sessionStorage.getItem("myApiSig"),
+          sk : sessionStorage.getItem("mySessionKey"),
+          format:"json",
+          };
+        /*
+        httpRequest.open("POST", url,true);
+        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        var params=concertirEnParametres(dades);
+        httpRequest.send(params);
+        */
+        var last_url="http://ws.audioscrobbler.com/2.0/";
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", last_url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+              processarRespostaAddTag(xhr);
+            }
+        }
+        var data = JSON.stringify(dades);
+        xhr.send(data);
+        /*
+            $.ajax({
+              type: "POST", //both are same, in new version of jQuery type renamed to method
+              url: last_url,
+              data: JSON.stringify(dades),
+              dataType: 'xml', //datatype especifica el tipus de dada que s'espera rebre del servidor
+              success: function(res){
+                  processarRespostaAddTag(res);
+              },
+              error : function(){
+                  console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
+                  document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+              }
+             });
+*/
+             function processarRespostaAddTag(xml) {
+               var i;
+               var xmlDoc = xml.responseXML;
+               x = xmlDoc.getElementsByTagName('lfm');
+               txt = x.getAttribute("status");
+               if( txt == "ok")
+               {
+                 document.getElementById("demo2").innerHTML = "<h2>Added Tag Correct</h2>";
+               }
+               else document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+             }
+        }
+    }
+
+    /*
+    The only illegal characters are &, < and > (as well as " or ' in attributes).
+
+    They're escaped using XML entities, in this case you want &amp; for &.
+
+    Metode: https://www.last.fm/api/show/track.love
+    Objective:  Love a track for a user profile.
+
+    Params
+    track (Required) : A track name (utf8 encoded)
+    artist (Required) : An artist name (utf8 encoded)
+    api_key (Required) : A Last.fm API key.
+    api_sig (Required) : A Last.fm method signature. See authentication for more information.
+    sk (Required) : A session key generated by authenticating a user via the authentication protocol.
+
+    Auth
+    This service requires authentication. Please see our authentication how-to.
+    This is a write service and must be accessed with an HTTP POST request.
+    All parameters should be sent in the POST body, including the 'method' parameter. See rest requests for more information.
+
+    Sample Response
+    <lfm status="ok">
+    </lfm>
+
+    Error in json:
+    {
+      "error": 10,
+      "message": "Invalid API key - You must be granted a valid key by last.fm"
+    }
+
+    Error in xml
+    <lfm status="failed">
+        <error code="10">Invalid API key - You must be granted a valid key by last.fm</error>
+    </lfm>
+    */
+
+    function trackLove()
+    {
+      if (sessionStorage.getItem("mySessionKey") == null)
+      {
+        console.log("Error no estas authenticat");
+      }
+      else {
+        //Estas loguejat i autenticat de forma correcta--
+          //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+            var dades = {
+              method: "track.love",
+              artist : "Muse",
+              track : "Take a Bow",
+              api_key : myAPI_key,
+              api_sig : sessionStorage.getItem("myApiSig"),
+              sk : sessionStorage.getItem("mySessionKey"),
+              format:"json",
+              };
+            /*
+            httpRequest.open("POST", url,true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var params=concertirEnParametres(dades);
+            httpRequest.send(params);
+            */
+            var last_url="http://ws.audioscrobbler.com/2.0/";
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("POST", last_url, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                  processarRespostaLoveTrack(xhr);
+                  //processarRespostaLoveTrack(this); //seria equivalent, faltaria gestionar errors
+                }
+            }
+            var data = JSON.stringify(dades);
+            xhr.send(data);
+            /*
+                $.ajax({
+                  type: "POST", //both are same, in new version of jQuery type renamed to method
+                  url: last_url,
+                  data: JSON.stringify(dades),
+                  dataType: 'xml', //datatype especifica el tipus de dada que s'espera rebre del servidor
+                  success: function(res){
+                      processarRespostaAddTag(res);
+                  },
+                  error : function(){
+                      console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
+                      document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+                  }
+                 });
+    */
+                 function processarRespostaLoveTrack(xml) {
+                   var i;
+                   var xmlDoc = xml.responseXML;
+                   x = xmlDoc.getElementsByTagName('lfm');
+                   txt = x.getAttribute("status");
+                   if( txt == "ok")
+                   {
+                     document.getElementById("demo2").innerHTML = "<h2>Added Tag Correct</h2>";
+                   }
+                   else document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+                 }
+            }
+        }
 
 /*
 Trying to find user default.it doesnt work
