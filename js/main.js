@@ -890,7 +890,7 @@ function addTrackTag()
           api_key : myAPI_key,
           api_sig : sessionStorage.getItem("myApiSig"),
           sk : sessionStorage.getItem("mySessionKey"),
-          format:"json",
+          format:"json"
           };
         /*
         httpRequest.open("POST", url,true);
@@ -991,7 +991,7 @@ function addTrackTag()
               api_key : myAPI_key,
               api_sig : sessionStorage.getItem("myApiSig"),
               sk : sessionStorage.getItem("mySessionKey"),
-              format:"json",
+              format:"json"
               };
             /*
             httpRequest.open("POST", url,true);
