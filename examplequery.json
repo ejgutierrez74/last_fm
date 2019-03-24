@@ -1,3 +1,7 @@
+/* Resultat de la consulta en format json ( indiques per paràmetre) a lastfm:
+http://ws.audioscrobbler.com/2.0/?method=user.getartisttracks&user=rj&artist=metallica&api_key=b6720a4ef50c0a1f63419e334fbf9c74&limit=5
+cerca els tracks de l’artist Metallica, que ha escoltat l’usuari rj, limitat a 5 valors i torna la resposta en format XML
+Nota un document json no pot tenir comentaris, per tant per treballar començeu a partir de les claus*/
 {
   "artisttracks": {
     "track": [{

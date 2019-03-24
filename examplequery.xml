@@ -1,3 +1,6 @@
+<!-- Resultat de la consulta en format XML ( per defecte) a lastfm:
+http://ws.audioscrobbler.com/2.0/?method=user.getartisttracks&user=rj&artist=metallica&api_key=b6720a4ef50c0a1f63419e334fbf9c74&limit=5
+cerca els tracks de l’artist Metallica, que ha escoltat l’usuari rj, limitat a 5 valors i torna la resposta en format XML-->
 <lfm status="ok">
   <artisttracks user="RJ" artist="metallica" page="1" perPage="5" totalPages="0" total="0">
     <track>
