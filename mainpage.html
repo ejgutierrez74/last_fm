@@ -20,15 +20,46 @@
 		</div>
 		<div id="error"></div>
 
+
+		<p>Notes de l'autor:<br>
+		Copyright tots els drets reservats...<br>
+		Prohibida la copia distribució o reproducció total o PARCIAL sense permís</p>
+<br>
+<br>
+		<p>Get user information; funciona de forma correcta i retorna un xml ( processa resposta)<br>
+		Get Default User information: No funciona perque veieu que sense un usuari no funciona
+		( malgrat documentacio diu que ficar usuari es opcional) <br>
+		<br>
+		Search artist: Funciona correctament, busco artistes amb nom eminem i mostro 10 primers resultats ( resposta ve en JSON) </p>
+
+	<br>
+		GetTopArtist funciona correctament: Torna en JSON els 10 primers artistes de la chart de lastfm.<br>
+								Potser és el codi més semblant i més academic per fer crides ajax com vistes a classe<br>
+<br>
+<br>
+		Tant calculateApiSig com CalculateApiSigStack mostren els resultats per consola ( sembal que no fan res, però si que fan).
+<br>
+		CalculateApiSig:( NO FUNCIONA)Es un intent de calcular la apiSig per fer autenticació, segueix les instruccions de lapi pero no accepta resultats.
+										Es un esboç i una prova.<br>
+		CalculateApiSigStack: ( SI FUNCIONA) seguint alguna resposta de Stackoverflow he calculat apisig, i aquesta.
+										Intentare aconseguir un codi més entenedor i simple<br>
+		Un cop teniu apisig, podeu fer una crida al getSession per obtenir una sessionKey ( requerida en els metodes que requereixen AUTENTICACIO)
+<br>
+<br>
+		AddTrackTag i trackLove : Son dos metodes que envies informacio ( POST), estan bé segons la documentació pero et retorna error de concertirEnParametres
+							invalids ( com si faltes o sobrés algun parametre). He comunicat a la comunitat a veure si em diuen algo.
+<br>
+
+
 		<button type="button" onclick="loadUserInfoXMLDoc()">Get User information</button>
-		<button type="button" onclick="loadDefaultUserInfoXMLDoc()">Get Default User information</button>
+		<button type="button" onclick="loadDefaultUserInfoXMLDoc()">Get Default User information (test)</button>
 		<button type="button" onclick="loadSearchArtistJSONDoc()">Search artist</button>
 		<br><br>
 		<button type="button" onclick="loadChartTopArtistsJSONDoc()">Get Top Artist Chart</button>
-		<button type="button" onclick="calculateApiSignature()">Calculate API Signature</button>
+		<button type="button" onclick="calculateApiSignature()">Calculate API Signature ( test)</button>
 		<button type="button" onclick="calculateApiSignatureStack()">Calculate API Signature Stack</button>
-		<button type="button" onclick="addTrackTag()">Add tags to track</button>
-		<button type="button" onclick="trackLove()">Love track</button>
+		<button type="button" onclick="addTrackTag()">Add tags to track ( test)</button>
+		<button type="button" onclick="trackLove()">Love track(test)</button>
 
 
 		<table id="demo"></table>

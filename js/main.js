@@ -218,33 +218,31 @@ Result XML :
 </user>
 */
 function loadUserInfoXMLDoc() {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          //Si hem tingut exit..
-          processarResposta(this);
-        }
-        //Falta processar error
-      };
-      xhttp.open("GET", "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=edufissure&api_key=b6720a4ef50c0a1f63419e334fbf9c74", true);
-      xhttp.send();
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      myFunction(this);
     }
-    function processarResposta(xml) {
-      var i;
-      var xmlDoc = xml.responseXML;
-      var table="<tr><th>Data</th><th>Value</th><th>Altre</th></tr>";
-      var x = xmlDoc.getElementsByTagName("user");
-      for (i = 0; i <x.length; i++) {
-        table += "<tr><td>" +
-        x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue +
-        "</td><td>" +
-        x[i].getElementsByTagName("playcount")[0].childNodes[0].nodeValue +
-        "</td><td><img src="+
-        x[i].getElementsByTagName("image")[2].childNodes[0].nodeValue +
-       "></img></td></tr>";
-       console.log(x[i]);
-      }
-      document.getElementById("demo").innerHTML = table;
+  };
+  xhttp.open("GET", "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=edufissure&api_key=b6720a4ef50c0a1f63419e334fbf9c74", true);
+  xhttp.send();
+}
+function myFunction(xml) {
+  var i;
+  var xmlDoc = xml.responseXML;
+  var table="<tr><th>Data</th><th>Value</th><th>Altre</th></tr>";
+  var x = xmlDoc.getElementsByTagName("user");
+  for (i = 0; i <x.length; i++) {
+    table += "<tr><td>" +
+    x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue +
+    "</td><td>" +
+    x[i].getElementsByTagName("playcount")[0].childNodes[0].nodeValue +
+    "</td><td><img src="+
+    x[i].getElementsByTagName("image")[2].childNodes[0].nodeValue +
+   "></img></td></tr>";
+   console.log(x[i]);
+  }
+  document.getElementById("demo").innerHTML = table;
 }
 /*
 
