@@ -185,7 +185,7 @@ $.ajax({
     dataType : 'json',
     success : function(data) {
             $('#success #artistName').html(data.user.name);
-           $('#success #artistImage').html('<img src="' + data.user.image['#text'] + '" />');
+           $('#success #artistImage').html('<img src="' + data.user.image[1]['#text'] + '" />');
            $('#success #artistBio').html(data.user.playcount);
        },
     error : function(code, message){
