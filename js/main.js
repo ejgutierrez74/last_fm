@@ -868,11 +868,21 @@ Error in xml
 </lfm>
 */
 
-function processarRespostaAddTag(xml) {
+function processarRespostaAddTagXmlHttpRequest(xml) {
   var i;
   var xmlDoc = xml.responseXML;
   var x = xmlDoc.getElementsByTagName("lfm");
   txt = x.getAttribute("status");
+  if( txt == "ok")
+  {
+    document.getElementById("demo2").innerHTML = "<h2>Added Tag Correct</h2>";
+  }
+  else document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+}
+
+function processarRespostaAddTagJquery(xml) {
+
+  txt = $(xml).find('lfm').attr('status');
   if( txt == "ok")
   {
     document.getElementById("demo2").innerHTML = "<h2>Added Tag Correct</h2>";
@@ -910,7 +920,7 @@ function calculate_apisig(params){
 }
 
 
-function addTrackTag()
+function addTrackTagJquery()
 {
   if (sessionStorage.getItem("mySessionKey") == null)
   {
@@ -927,7 +937,58 @@ function addTrackTag()
           track : "Take a Bow",
           //A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
         //  tags : [tag1,tag2],
-          tags : "criminal2",
+        //Tags as other parameters should be utf8-encoded two or more parameters seems doesnt work
+          tags : "criminal4",
+          api_key : myAPI_key,
+          token : captured,
+          sk : sessionStorage.getItem("mySessionKey")
+          };
+
+        var last_url="http://ws.audioscrobbler.com/2.0/";
+
+        var myapisigtag = calculate_apisig(dades);
+        console.log("La apiSig de Add TAg es: " + myapisigtag['api_sig']);
+        //Hauria de poder esborrar token perque no ho necessita en teoria pero si no no funciona
+        //delete dades["token"];
+        dades['api_sig']= myapisigtag['api_sig'];
+
+            $.ajax({
+              type: "POST", //both are same, in new version of jQuery type renamed to method
+              url: last_url,
+              data: dades,
+              dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
+              success: function(res){
+                  processarRespostaAddTagJquery(res);
+              },
+              error : function(){
+                  console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
+                  document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+              }
+             });
+
+
+    }
+}
+
+function addTrackTagXMLHttpRequest()
+{
+  if (sessionStorage.getItem("mySessionKey") == null)
+  {
+    console.log("Error no estas authenticat");
+  }
+  else {
+    //Estas loguejat i autenticat de forma correcta--
+          var tag1="Relax";
+          var tag2="Intense";
+        //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+        var dades = {
+          method: "track.addTags",
+          artist : "Muse",
+          track : "Take a Bow",
+          //A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
+        //  tags : [tag1,tag2],
+        //Tags as other parameters should be utf8-encoded two or more parameters seems doesnt work
+          tags : "criminal4",
           api_key : myAPI_key,
           token : captured,
           sk : sessionStorage.getItem("mySessionKey")
@@ -939,35 +1000,22 @@ function addTrackTag()
         console.log("La apiSig de Add TAg es: " + myapisigtag['api_sig']);
         //delete dades["token"];
         dades['api_sig']= myapisigtag['api_sig'];
-        /*var xhr = new XMLHttpRequest();
+
+        var xhr = new XMLHttpRequest();
 
         xhr.open("POST", last_url, true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-              processarRespostaAddTag(xhr);
+              processarRespostaAddTagXmlHttpRequest(xhr);
             }
         }
         var data = JSON.stringify(dades);
         xhr.send(data);
-        */
-            $.ajax({
-              type: "POST", //both are same, in new version of jQuery type renamed to method
-              url: last_url,
-              data: dades,
-              dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
-              success: function(res){
-                  processarRespostaAddTag(res);
-              },
-              error : function(){
-                  console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
-                  document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
-              }
-             });
-
 
     }
 }
+
     /*
     The only illegal characters are &, < and > (as well as " or ' in attributes).
 
@@ -1004,7 +1052,7 @@ function addTrackTag()
     </lfm>
     */
 
-    function trackLove()
+    function trackLoveXMlHttpRequest()
     {
       if (sessionStorage.getItem("mySessionKey") == null)
       {
@@ -1032,7 +1080,7 @@ function addTrackTag()
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                  processarRespostaLoveTrack(xhr);
+                  processarRespostaLoveTrackXmlHtttpRequest(xhr);
                   //processarRespostaLoveTrack(this); //seria equivalent, faltaria gestionar errors
                 }
             }
@@ -1043,41 +1091,70 @@ function addTrackTag()
             dadestl['api_sig']= myapisiglove['api_sig'];
             var data = JSON.stringify(dadestl);
             xhr.send(data);
-            /**/
-/*
-            var myapisiglove = calculate_apisig(dadestl);
-            console.log("La apiSig de Track love es: " + myapisiglove['api_sig']);
-          //  delete dadestl["token"];
 
-            dadestl['api_sig']= myapisiglove['api_sig'];
-                $.ajax({
-                  type: "POST", //both are same, in new version of jQuery type renamed to method
-                  url: last_url,
-                  data: dadestl,
-                  dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
-                  success: function(res){
-                      processarRespostaLoveTrack(res);
-                  },
-                  error : function(){
-                      console.log("Error en Love Track to track" + dades.track + "de l'artista" + dades.artist);
-                      document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
-                  }
-                 });
-    */
-                 function processarRespostaLoveTrack(xml) {
+                 function processarRespostaLoveTrackXmlHtttpRequest(xml) {
                    var i;
                    var xmlDoc = xml.responseXML;
                    x = xmlDoc.getElementsByTagName("lfm");
                    txt = x.getAttribute("status");
                    if( txt == "ok")
                    {
-                     document.getElementById("demo2").innerHTML = "<h2>Added Tag Correct</h2>";
+                     document.getElementById("demo2").innerHTML = "<h2>Added Love Correct to track</h2>";
                    }
                    else document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
                  }
             }
         }
 
+        function trackLoveJquery()
+        {
+          if (sessionStorage.getItem("mySessionKey") == null)
+          {
+            console.log("Error no estas authenticat");
+          }
+          else {
+            //Estas loguejat i autenticat de forma correcta--
+              //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+              var last_url="http://ws.audioscrobbler.com/2.0/";
+
+                var dadestl = {
+                  method: 'track.Love',
+                  artist : Utf8.encode('Muse'),
+                  track : Utf8.encode('Take a Bow'),
+                  api_key : myAPI_key,
+                  token : captured,
+                  sk : sessionStorage.getItem("mySessionKey")
+                  };
+
+                var myapisiglove = calculate_apisig(dadestl);
+                console.log("La apiSig de Track love es: " + myapisiglove['api_sig']);
+                //delete dadestl["token"];
+                dadestl['api_sig']= myapisiglove['api_sig'];
+
+                    $.ajax({
+                      type: "POST", //both are same, in new version of jQuery type renamed to method
+                      url: last_url,
+                      data: dadestl,
+                      dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
+                      success: function(res){
+                          processarRespostaLoveTrackJquery(res);
+                      },
+                      error : function(){
+                          console.log("Error en Love Track to track" + dades.track + "de l'artista" + dades.artist);
+                          document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+                      }
+                     });
+
+                     function processarRespostaLoveTrackJquery(xml) {
+                       txt = $(xml).find('lfm').attr('status');
+                       if( txt == "ok")
+                       {
+                         document.getElementById("demo2").innerHTML = "<h2>Added Track Love Correct</h2>";
+                       }
+                       else document.getElementById("demo2").innerHTML = "<h2>Failure Track Love</h2>";
+                }
+            }
+}
 /*
 Trying to find user default.it doesnt work
 */
