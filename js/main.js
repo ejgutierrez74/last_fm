@@ -1090,6 +1090,7 @@ function addTrackTagXMLHttpRequest()
             //delete dadestl["token"];
             dadestl['api_sig']= myapisiglove['api_sig'];
             var data = JSON.stringify(dadestl);
+            
             xhr.send(data);
 
                  function processarRespostaLoveTrackXmlHtttpRequest(xml) {
