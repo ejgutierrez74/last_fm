@@ -1052,7 +1052,7 @@ function addTrackTagXMLHttpRequest()
     </lfm>
     */
 
-    function trackLoveXMlHttpRequest()
+    function trackLoveXMlHttpRequestSendQuery()
     {
       if (sessionStorage.getItem("mySessionKey") == null)
       {
@@ -1074,30 +1074,37 @@ function addTrackTagXMLHttpRequest()
               };
 
             var last_url="http://ws.audioscrobbler.com/2.0/";
-           var xhr = new XMLHttpRequest();
-
-            xhr.open('POST', last_url, true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                  processarRespostaLoveTrackXmlHtttpRequest(xhr);
-                  //processarRespostaLoveTrack(this); //seria equivalent, faltaria gestionar errors
-                }
-            }
-
             var myapisiglove = calculate_apisig(dadestl);
             console.log("La apiSig de Track love es: " + myapisiglove['api_sig']);
             //delete dadestl["token"];
             dadestl['api_sig']= myapisiglove['api_sig'];
-            var data = JSON.stringify(dadestl);
-            
-            xhr.send(data);
+           var xhr = new XMLHttpRequest();
 
-                 function processarRespostaLoveTrackXmlHtttpRequest(xml) {
-                   var i;
-                   var xmlDoc = xml.responseXML;
-                   x = xmlDoc.getElementsByTagName("lfm");
-                   txt = x.getAttribute("status");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                  processarRespostaLoveTrackXmlHtttpRequestSend(xhr);
+                  //processarRespostaLoveTrack(this); //seria equivalent, faltaria gestionar errors
+                }
+            }
+
+            var urlquery ="http://ws.audioscrobbler.com/2.0/?method=track.Love"
+                          + "&artist=" + dadestl.artist
+                          + "&track=" + dadestl.track
+                          + "&api_key=" + dadestl.api_key
+                          + "&token=" + dadestl.token
+                          + "&sk=" + dadestl.sk
+                          + "&api_sig=" + dadestl.api_sig;
+            xhr.open('POST', urlquery, true);
+    				xhr.overrideMimeType('text/xml'); // Crec que sense aquesta linea funcionaria igual
+            //xhr.responseType = 'document';
+    				xhr.send(null);
+
+
+                 function processarRespostaLoveTrackXmlHtttpRequestSend(xml) {
+
+                   var xmlDoc = xml.responseXML.documentElement; //Element root of the xml document
+                  // var x = xmlDoc.getElementsByTagName("lfm"); //If there were some childs ( ex; books in a bookstore)
+                   var txt = xmlDoc.getAttribute("status");
                    if( txt == "ok")
                    {
                      document.getElementById("demo2").innerHTML = "<h2>Added Love Correct to track</h2>";
@@ -1106,6 +1113,61 @@ function addTrackTagXMLHttpRequest()
                  }
             }
         }
+
+        function trackLoveXMlHttpRequest()
+        {
+          if (sessionStorage.getItem("mySessionKey") == null)
+          {
+            console.log("Error no estas authenticat");
+          }
+          else {
+            //Estas loguejat i autenticat de forma correcta--
+              //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+
+
+
+                var dadestl = {
+                  method: 'track.Love',
+                  artist : Utf8.encode('Muse'),
+                  track : Utf8.encode('Take a Bow'),
+                  api_key : myAPI_key,
+                  token : captured,
+                  sk : sessionStorage.getItem("mySessionKey")
+                  };
+
+                var last_url="http://ws.audioscrobbler.com/2.0/";
+               var xhr = new XMLHttpRequest();
+
+                xhr.open('POST', last_url, true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                      processarRespostaLoveTrackXmlHtttpRequest(xhr);
+                      //processarRespostaLoveTrack(this); //seria equivalent, faltaria gestionar errors
+                    }
+                }
+
+                var myapisiglove = calculate_apisig(dadestl);
+                console.log("La apiSig de Track love es: " + myapisiglove['api_sig']);
+                //delete dadestl["token"];
+                dadestl['api_sig']= myapisiglove['api_sig'];
+                var data = JSON.stringify(dadestl);
+
+                xhr.send(data);
+
+                     function processarRespostaLoveTrackXmlHtttpRequest(xml) {
+                       var i;
+                       var xmlDoc = xml.responseXML;
+                       x = xmlDoc.getElementsByTagName("lfm");
+                       txt = x.getAttribute("status");
+                       if( txt == "ok")
+                       {
+                         document.getElementById("demo2").innerHTML = "<h2>Added Love Correct to track</h2>";
+                       }
+                       else document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
+                     }
+                }
+            }
 
         function trackLoveJquery()
         {
@@ -1140,7 +1202,7 @@ function addTrackTagXMLHttpRequest()
                       success: function(res){
                           processarRespostaLoveTrackJquery(res);
                       },
-                      error : function(){
+                      error : function(xhr, ajaxOptions, thrownError){
                           console.log("Error en Love Track to track" + dades.track + "de l'artista" + dades.artist);
                           document.getElementById("demo2").innerHTML = "<h2>Failure</h2>";
                       }

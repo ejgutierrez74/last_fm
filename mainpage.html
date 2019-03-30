@@ -66,6 +66,7 @@
 		<br><br>AddTrackTag : addTrackTagXMLHttpRequest() Envies la mateixa configuracio que en jquery ( parametres) pero NO funciona invalid parameters ??
 <br>nota només pots enviar un tag alhora no una llista de tags ( segons documentació hauries de poder)
 <br>
+
 <button type="button" onclick="addTrackTagJquery()">Add tags to track ( jquery)</button>
 <br>
 <br>
@@ -73,10 +74,17 @@ AddTrackTag : addTrackTagJquery()  envies informacio ( POST), estan bé segons l
 <br>
 <br>
 <br>
-<button type="button" onclick="trackLoveXMlHttpRequest()">Love track( XMlHttpRequest)</button>
+<button type="button" onclick="trackLoveXMlHttpRequestSendQuery()">Love track( XMlHttpRequest send string)</button>
 <br>
 <br>
-TrackLove : trackLoveXMlHttpRequest  envies informacio ( POST), estan i mateix parametres jquery i  NO funciona invalid parameters.
+TrackLove : trackLoveXMlHttpRequest  envies informacio ( POST), i funciona enviant com parametres una cadena i no un objecte JSON.
+<br>
+<br>
+<br>
+<button type="button" onclick="trackLoveXMlHttpRequest()">Love track( XMlHttpRequest send JSON)</button>
+<br>
+<br>
+TrackLove : trackLoveXMlHttpRequest  envies informacio ( POST), estan i mateix parametres jquery en format json objecti  NO funciona invalid parameters.
 <br>
 <br>
 <button type="button" onclick="trackLoveJquery()">Love track( Jquery)</button>
